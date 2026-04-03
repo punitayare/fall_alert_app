@@ -25,12 +25,14 @@ db = firestore.client()
 
 # ------------------- Globals -------------------
 last_fall_time = {}
-FALL_DISPLAY_TIME = 0
-
+FALL_DISPLAY_TIME = 30
 
 WINDOW_SIZE = 100
 NUM_CHANNELS = 8
 sensor_windows = {}  # user_id -> deque
+
+# Track active fall per user to avoid duplicate notifications/storage
+active_fall = {}  # user_id -> True/False
 
 # Load ML model
 try:
@@ -63,10 +65,6 @@ def get_user_from_device(device_id: str):
         else:
             logger.warning(f"No mapping found for device {device_id}")
             return None
-
-    except Exception as e:
-        logger.error(f"Device mapping error: {e}")
-        return None
 
     except Exception as e:
         logger.error(f"Device mapping error: {e}")
@@ -182,9 +180,13 @@ async def fall_status(
         logger.error(f"❌ Prediction error: {e}")
         return {"fall_detected": False, "confidence": 0.0}
 
-    # -------- Step 5: Send Notification & Save Event --------
+    # -------- Step 5: Single Notification & Single Storage --------
     fcm_token = None
-    if fall_detected:
+    # Check if a fall is already active
+    if not active_fall.get(user_id, False) and fall_detected:
+        # Mark fall as active
+        active_fall[user_id] = True
+
         # Get FCM token
         if trigger_fcm:
             fcm_token = await get_user_fcm_token(user_id)
@@ -215,6 +217,11 @@ async def fall_status(
                 "🚨 Fall Detected!",
                 f"Confidence: {probability:.2f}"
             )
+
+    # Reset active fall if no fall detected for 10s
+    if not fall_detected and active_fall.get(user_id, False):
+        if time.time() - last_fall_time.get(user_id, 0) > 10:
+            active_fall[user_id] = False
 
     # -------- Step 6: Response --------
     return {
