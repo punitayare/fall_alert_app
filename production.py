@@ -25,7 +25,8 @@ db = firestore.client()
 
 # ------------------- Globals -------------------
 last_fall_time = {}
-FALL_DISPLAY_TIME = 30
+FALL_DISPLAY_TIME = 0
+
 
 WINDOW_SIZE = 100
 NUM_CHANNELS = 8
