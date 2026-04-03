@@ -27,7 +27,7 @@ db = firestore.client()
 last_fall_time = {}
 FALL_DISPLAY_TIME = 30
 
-WINDOW_SIZE = 100
+WINDOW_SIZE = 20
 NUM_CHANNELS = 8
 sensor_windows = {}  # user_id -> deque
 
