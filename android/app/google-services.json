@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "417982045231",
+    "project_id": "fall-simulated-3865c",
+    "storage_bucket": "fall-simulated-3865c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:417982045231:android:a69e820b6cba0970ca3ada",
+        "android_client_info": {
+          "package_name": "com.example.fall_detection_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoi1dZnlpm9dUtU-dI4FG8h5DahG8A5hw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
